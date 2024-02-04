@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Homework17</string>
+    <string name="name_richard_milhouse_jones">Name: Richard Milhouse Jones</string>
+    <string name="birth_place_scarsdale_arizona">Birth place: Scarsdale, Arizona</string>
+    <string name="a_bomb">A-Bomb</string>
+    <string name="aliases_rick_jones">Aliases: Rick Jones</string>
+    <string name="publisher_marvel_comics">Publisher: Marvel Comics</string>
+    <string name="race_human">Race: Human</string>
+    <string name="gender_male">Gender: Male</string>
+    <string name="height_human">Height: Human</string>
+    <string name="weight_human">Weight: Human</string>
+    <string name="intelligence_38">Intelligence: 38</string>
+    <string name="strength_100">Strength: 100</string>
+    <string name="speed_17">Speed: 17</string>
+    <string name="durability_80">Durability: 80</string>
+    <string name="power_80">Power: 80</string>
+    <string name="combat_64">Combat: 64</string>
+</resources>
