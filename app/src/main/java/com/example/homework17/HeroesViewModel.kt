@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class HeroesViewModel(private val repository: HeroesRepository) : ViewModel() {
@@ -19,12 +20,14 @@ class HeroesViewModel(private val repository: HeroesRepository) : ViewModel() {
         loadHeroes()
     }
 
-    private fun loadHeroes() = viewModelScope.launch {
-        try {
-            val heroesList = repository.getSuperheroes()
-            _heroes.postValue(heroesList)
-        } catch (e: Exception) {
-            _error.postValue("Failed to fetch heroes: ${e.message}")
+    private fun loadHeroes() {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val heroesList = repository.getSuperheroes()
+                _heroes.postValue(heroesList)
+            } catch (e: Exception) {
+                _error.postValue("Failed to fetch heroes: ${e.message}")
+            }
         }
     }
 }
