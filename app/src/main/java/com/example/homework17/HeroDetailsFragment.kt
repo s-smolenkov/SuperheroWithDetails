@@ -1,19 +1,21 @@
 package com.example.homework17
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
+import com.example.homework17.databinding.DetailsFragmentLayoutBinding
 
-class HeroDetailsFragment : Fragment() {
+class HeroDetailsFragment : DialogFragment() {
+
+    private var _binding: DetailsFragmentLayoutBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setStyle(STYLE_NORMAL, R.style.CustomDialog)
     }
 
     override fun onCreateView(
@@ -21,49 +23,46 @@ class HeroDetailsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.details_fragment_layout, container, false)
+        _binding = DetailsFragmentLayoutBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        val name: TextView = view.findViewById(R.id.heroName)
-        val image: ImageView = view.findViewById(R.id.heroPhoto)
-        val fullName: TextView = view.findViewById(R.id.fullName)
-        val placeOfBirth: TextView = view.findViewById(R.id.placeOfBirth)
-        val aliases: TextView = view.findViewById(R.id.aliases)
-        val publisher: TextView = view.findViewById(R.id.publisher)
-        val gender: TextView = view.findViewById(R.id.gender)
-        val race: TextView = view.findViewById(R.id.race)
-        val height: TextView = view.findViewById(R.id.height)
-        val weight: TextView = view.findViewById(R.id.weight)
-        val intelligence: TextView = view.findViewById(R.id.intelligence)
-        val strength: TextView = view.findViewById(R.id.strength)
-        val speed: TextView = view.findViewById(R.id.speed)
-        val durability: TextView = view.findViewById(R.id.durability)
-        val power: TextView = view.findViewById(R.id.power)
-        val combat: TextView = view.findViewById(R.id.combat)
-
-
         arguments?.getParcelable<Hero>("hero")?.let { hero ->
-            name.text = hero.name
-            Glide.with(this).load(hero.images.lg).into(image)
-            fullName.text = "Full Name: ${hero.biography.fullName}"
-            placeOfBirth.text = "Place of Birth: ${hero.biography.placeOfBirth}"
-            aliases.text = "Aliases: ${hero.biography.aliases.joinToString(", ")}"
-            publisher.text = "Publisher: ${hero.biography.publisher}"
-            gender.text = "Gender: ${hero.appearance.gender}"
-            race.text = "Race: ${hero.appearance.race}"
-            height.text = "Height: ${hero.appearance.height.joinToString(", ")}"
-            weight.text = "Weight: ${hero.appearance.weight.joinToString(", ")}"
-            intelligence.text = "Intelligence: ${hero.powerstats.intelligence}"
-            strength.text = "Strength: ${hero.powerstats.strength}"
-            speed.text = "Speed: ${hero.powerstats.speed}"
-            durability.text = "Durability: ${hero.powerstats.durability}"
-            power.text = "Power: ${hero.powerstats.power}"
-            combat.text = "Combat: ${hero.powerstats.combat}"
-
+            binding.heroName.text = hero.name
+            Glide.with(this).load(hero.images.lg).into(binding.heroPhoto)
+            "Full Name: ${hero.biography.fullName}".also { binding.fullName.text = it }
+            "Place of Birth: ${hero.biography.placeOfBirth}".also { binding.placeOfBirth.text = it }
+            "Aliases: ${hero.biography.aliases.joinToString(", ")}".also {
+                binding.aliases.text = it
+            }
+            "Publisher: ${hero.biography.publisher}".also { binding.publisher.text = it }
+            "Gender: ${hero.appearance.gender}".also { binding.gender.text = it }
+            "Race: ${hero.appearance.race}".also { binding.race.text = it }
+            "Height: ${hero.appearance.height.joinToString(", ")}".also { binding.height.text = it }
+            "Weight: ${hero.appearance.weight.joinToString(", ")}".also { binding.weight.text = it }
+            "Intelligence: ${hero.powerstats.intelligence}".also { binding.intelligence.text = it }
+            "Strength: ${hero.powerstats.strength}".also { binding.strength.text = it }
+            "Speed: ${hero.powerstats.speed}".also { binding.speed.text = it }
+            "Durability: ${hero.powerstats.durability}".also { binding.durability.text = it }
+            "Power: ${hero.powerstats.power}".also { binding.power.text = it }
+            "Combat: ${hero.powerstats.combat}".also { binding.combat.text = it }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
 }

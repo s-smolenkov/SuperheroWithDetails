@@ -3,53 +3,39 @@ package com.example.homework17
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
-import androidx.fragment.app.FragmentContainerView
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.homework17.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var viewModel: HeroesViewModel
+    private lateinit var binding: ActivityMainBinding
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        viewModel = ViewModelProvider(
+            this,
+            HeroesViewModelFactory(HeroesRepository(ApiClient.api))
+        )[HeroesViewModel::class.java]
 
-        val fragmentContainer: FragmentContainerView = findViewById(R.id.fragmentContainer)
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
 
-
-        ApiClient.api.getSuperheroes().enqueue(object : Callback<List<Hero>> {
-            override fun onResponse(call: Call<List<Hero>>, response: Response<List<Hero>>) {
-                val heroes = response.body() ?: emptyList()
-                recyclerView.adapter = HeroAdapter(heroes) {
-                    openHeroDetailFragment(it)
-                    fragmentContainer.visibility = View.VISIBLE
-                }
-            }
-
-            override fun onFailure(call: Call<List<Hero>>, t: Throwable) {
-                Log.e("MainActivity", "Error fetching heroes", t)
-
-                Toast.makeText(
-                    this@MainActivity,
-                    "Failed to fetch heroes: ${t.message}",
-                    Toast.LENGTH_LONG
-                ).show()
+        viewModel.heroes.observe(this, Observer { heroes ->
+            binding.recyclerView.adapter = HeroAdapter(heroes) { hero ->
+                openHeroDetailFragment(hero)
             }
         })
 
-        supportFragmentManager.addOnBackStackChangedListener {
-            if (supportFragmentManager.backStackEntryCount == 0) {
-                fragmentContainer.visibility = View.GONE
-            }
-        }
-
+        viewModel.error.observe(this, Observer { errorMessage ->
+            Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
+        })
     }
 
     private fun openHeroDetailFragment(hero: Hero) {
@@ -59,9 +45,6 @@ class MainActivity : AppCompatActivity() {
                 putParcelable("hero", hero)
             }
         }
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, fragment)
-            .addToBackStack("details_fragment")
-            .commit()
+        fragment.show(supportFragmentManager, "heroDetails")
     }
 }

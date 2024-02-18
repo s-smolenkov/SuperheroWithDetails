@@ -34,11 +34,14 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    viewBinding { enable = true }
+
 }
 
 dependencies {
 
-    implementation ("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation ("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.google.code.gson:gson:2.10.1")
@@ -46,6 +49,8 @@ dependencies {
     implementation ("com.squareup.retrofit2:adapter-rxjava2:2.3.0")
     implementation ("io.reactivex.rxjava2:rxandroid:2.1.1")
     implementation ("com.github.bumptech.glide:glide:4.15.1")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
